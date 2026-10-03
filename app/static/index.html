@@ -1,0 +1,1851 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CODShield &mdash; COD Risk Intelligence</title>
+<meta name="description" content="AI-powered Cash-on-Delivery risk intelligence for Pakistan e-commerce. Score every order before dispatch.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --surface3: #22272e;
+  --border: #30363d;
+  --border-light: #21262d;
+  --text: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #484f58;
+  --teal: #2dd4bf;
+  --teal-dim: #14b8a6;
+  --teal-bg: rgba(45,212,191,0.08);
+  --teal-border: rgba(45,212,191,0.2);
+  --red: #f85149;
+  --red-bg: rgba(248,81,73,0.1);
+  --amber: #e3b341;
+  --amber-bg: rgba(227,179,65,0.1);
+  --green: #3fb950;
+  --green-bg: rgba(63,185,80,0.1);
+  --blue: #58a6ff;
+  --r: 8px;
+  --r-lg: 12px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+a { color: var(--teal); text-decoration: none; }
+.hidden { display: none !important; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
+
+/* ── SVG ICON HELPER ── */
+svg { display: inline-block; vertical-align: middle; flex-shrink: 0; }
+
+/* ── LOGIN ─────────────────────────────────────── */
+.auth-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 480px;
+}
+.auth-left {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 48px 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  overflow: hidden;
+}
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand-mark {
+  width: 36px; height: 36px;
+  background: var(--teal);
+  border-radius: 8px;
+  display: grid; place-items: center;
+}
+.brand-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.auth-headline { max-width: 460px; }
+.auth-headline h1 {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+.auth-headline h1 span { color: var(--teal); }
+.auth-headline p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 400px;
+}
+.auth-metrics {
+  display: flex;
+  gap: 32px;
+}
+.auth-metric-val {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.auth-metric-val span { color: var(--teal); }
+.auth-metric-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+}
+.auth-preview {
+  flex: 1;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.preview-bar {
+  background: var(--surface3);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.preview-dot { width: 10px; height: 10px; border-radius: 50%; }
+.preview-body { padding: 20px; display: grid; gap: 10px; }
+.preview-order {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: 7px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.preview-order-id { font-weight: 600; color: var(--text); flex: 1; }
+.preview-score {
+  font-weight: 700;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.auth-right {
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+.auth-form-wrap { width: 100%; max-width: 360px; }
+.auth-form-wrap h2 {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+.auth-form-wrap .sub {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 28px;
+}
+.demo-notice {
+  background: var(--teal-bg);
+  border: 1px solid var(--teal-border);
+  border-radius: var(--r);
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--teal);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.form-field { margin-bottom: 16px; }
+.form-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+.form-field input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--r);
+  padding: 10px 12px;
+  font-size: 14px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.form-field input:focus {
+  outline: none;
+  border-color: var(--teal-dim);
+  box-shadow: 0 0 0 3px rgba(45,212,191,0.12);
+}
+.btn-submit {
+  width: 100%;
+  background: var(--teal);
+  color: #0d1117;
+  border: none;
+  border-radius: var(--r);
+  padding: 11px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 8px;
+  transition: background 0.15s, transform 0.1s;
+}
+.btn-submit:hover { background: #5eead4; }
+.btn-submit:active { transform: scale(0.99); }
+.auth-error {
+  color: var(--red);
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+/* ── APP SHELL ─────────────────────────────────── */
+.shell { display: flex; min-height: 100vh; }
+
+/* ── SIDEBAR ───────────────────────────────────── */
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+.sidebar-top {
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid var(--border-light);
+}
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.sidebar-brand-mark {
+  width: 28px; height: 28px;
+  background: var(--teal);
+  border-radius: 6px;
+  display: grid; place-items: center;
+}
+.sidebar-nav {
+  padding: 12px 8px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.nav-section-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  padding: 10px 8px 4px;
+  font-weight: 600;
+}
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  width: 100%;
+  text-align: left;
+  transition: background 0.12s, color 0.12s;
+}
+.nav-btn:hover { background: var(--surface2); color: var(--text); }
+.nav-btn.active {
+  background: var(--teal-bg);
+  color: var(--teal);
+  font-weight: 600;
+}
+.nav-btn svg { opacity: 0.7; }
+.nav-btn.active svg { opacity: 1; }
+.sidebar-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-light);
+}
+.user-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.user-avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--teal-bg);
+  border: 1px solid var(--teal-border);
+  display: grid; place-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--teal);
+  flex-shrink: 0;
+}
+.user-info { min-width: 0; }
+.user-name {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.user-email {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── MAIN ──────────────────────────────────────── */
+.main-area {
+  flex: 1;
+  overflow-y: auto;
+  min-width: 0;
+}
+.page {
+  padding: 28px 32px;
+  max-width: 1400px;
+}
+
+/* ── PAGE HEADER ───────────────────────────────── */
+.pg-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+.pg-head-left h1 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+.pg-head-left p { font-size: 13px; color: var(--text-secondary); }
+.pg-head-right { display: flex; gap: 8px; flex-shrink: 0; }
+
+/* ── BUTTONS ───────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--surface3); border-color: var(--border); }
+.btn-primary {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: #0d1117;
+  font-weight: 600;
+}
+.btn-primary:hover { background: #5eead4; border-color: #5eead4; }
+.btn-sm { padding: 5px 10px; font-size: 12px; }
+.btn-ghost { background: transparent; border-color: transparent; color: var(--text-secondary); }
+.btn-ghost:hover { background: var(--surface2); color: var(--text); border-color: var(--border); }
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  padding: 0;
+  margin-bottom: 20px;
+  transition: color 0.12s;
+}
+.back-link:hover { color: var(--text); }
+.btn-dispatch { background: var(--green-bg); border-color: rgba(63,185,80,0.3); color: var(--green); }
+.btn-dispatch:hover { background: rgba(63,185,80,0.18); }
+.btn-review { background: var(--amber-bg); border-color: rgba(227,179,65,0.3); color: var(--amber); }
+.btn-review:hover { background: rgba(227,179,65,0.18); }
+.btn-flag { background: var(--red-bg); border-color: rgba(248,81,73,0.3); color: var(--red); }
+.btn-flag:hover { background: rgba(248,81,73,0.18); }
+
+/* ── STAT CARDS ────────────────────────────────── */
+.stat-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 20px; }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 18px 20px;
+}
+.stat-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.stat-val {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.stat-val.c-teal { color: var(--teal); }
+.stat-val.c-red { color: var(--red); }
+.stat-val.c-amber { color: var(--amber); }
+.stat-val.c-green { color: var(--green); }
+.stat-sub { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+
+/* ── PANEL ─────────────────────────────────────── */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-light);
+}
+.panel-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.panel-sub { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+.panel-body { padding: 20px; }
+.panel-body.no-pad { padding: 0; }
+
+/* ── TABLE ─────────────────────────────────────── */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th {
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.data-table td {
+  padding: 12px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text);
+}
+.data-table tbody tr { transition: background 0.1s; cursor: pointer; }
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table tbody tr:hover { background: var(--surface2); }
+.td-id { font-weight: 600; font-size: 12px; color: var(--text-secondary); font-family: monospace; }
+.td-name { font-weight: 500; }
+.td-amt { font-variant-numeric: tabular-nums; }
+.td-action { color: var(--teal); font-size: 12px; font-weight: 500; }
+
+/* ── RISK BADGE ────────────────────────────────── */
+.risk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.risk-badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.risk-badge.high { background: var(--red-bg); color: var(--red); }
+.risk-badge.medium { background: var(--amber-bg); color: var(--amber); }
+.risk-badge.low { background: var(--green-bg); color: var(--green); }
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+.status-badge.dispatch { background: var(--green-bg); color: var(--green); }
+.status-badge.review { background: var(--amber-bg); color: var(--amber); }
+.status-badge.flagged { background: var(--red-bg); color: var(--red); }
+.status-badge.pending { background: var(--surface3); color: var(--text-muted); }
+
+/* ── SCORE BAR ─────────────────────────────────── */
+.score-cell { display: flex; align-items: center; gap: 8px; }
+.score-track { width: 60px; height: 3px; background: var(--surface3); border-radius: 2px; flex-shrink: 0; }
+.score-fill { height: 100%; border-radius: 2px; }
+.score-num { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; width: 26px; }
+
+/* ── FILTER TABS ───────────────────────────────── */
+.filter-tabs { display: flex; gap: 4px; }
+.ftab {
+  padding: 4px 10px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.ftab:hover { background: var(--surface2); color: var(--text-secondary); }
+.ftab.active { background: var(--teal-bg); border-color: var(--teal-border); color: var(--teal); }
+
+/* ── DETAIL VIEW ───────────────────────────────── */
+.detail-layout { display: grid; grid-template-columns: 1fr 340px; gap: 16px; }
+.detail-main-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.detail-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.detail-title { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 4px; }
+.detail-meta { font-size: 13px; color: var(--text-secondary); }
+.gauge-area {
+  padding: 28px 24px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  border-bottom: 1px solid var(--border-light);
+}
+.gauge-svg-wrap { flex-shrink: 0; }
+.gauge-info { flex: 1; }
+.gauge-score-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; }
+.gauge-score-num { font-size: 48px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+.gauge-score-sub { font-size: 13px; color: var(--text-secondary); margin-top: 6px; }
+.gauge-prediction { margin-top: 14px; font-size: 14px; font-weight: 600; }
+.detail-signals {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+.signal-item {
+  padding: 16px 20px;
+  border-right: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+}
+.signal-item:nth-child(4n) { border-right: none; }
+.signal-item:nth-last-child(-n+4) { border-bottom: none; }
+.signal-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; font-weight: 500; }
+.signal-val { font-size: 16px; font-weight: 700; }
+.detail-actions {
+  padding: 16px 24px;
+  display: flex;
+  gap: 8px;
+  border-top: 1px solid var(--border-light);
+}
+.detail-sidebar { display: flex; flex-direction: column; gap: 12px; }
+.factor-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 13px;
+}
+.factor-item:last-child { border-bottom: none; }
+.factor-name { color: var(--text-secondary); flex: 1; }
+.factor-impact { font-size: 12px; font-weight: 600; color: var(--red); font-variant-numeric: tabular-nums; }
+.factor-bar { width: 60px; height: 3px; background: var(--surface3); border-radius: 2px; margin: 0 10px; }
+.factor-bar-fill { height: 100%; border-radius: 2px; background: var(--red); }
+.rec-panel {
+  background: var(--teal-bg);
+  border: 1px solid var(--teal-border);
+  border-radius: var(--r);
+  padding: 14px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.rec-panel strong { display: block; color: var(--teal); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+
+/* ── ANALYTICS ─────────────────────────────────── */
+.analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.donut-layout { display: flex; align-items: center; gap: 24px; }
+.donut-legend-list { flex: 1; display: grid; gap: 10px; }
+.legend-row { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.legend-swatch { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.legend-label { flex: 1; color: var(--text-secondary); }
+.legend-val { font-weight: 600; font-variant-numeric: tabular-nums; }
+.bar-list { display: grid; gap: 12px; }
+.bar-item { display: grid; grid-template-columns: 96px 1fr 40px; gap: 10px; align-items: center; }
+.bar-label { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-track { height: 6px; background: var(--surface3); border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; transition: width 0.8s cubic-bezier(.4,0,.2,1); }
+.bar-val { font-size: 12px; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* ── CSV UPLOAD ────────────────────────────────── */
+.drop-zone {
+  border: 1px dashed var(--border);
+  border-radius: var(--r-lg);
+  padding: 48px 32px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.drop-zone:hover, .drop-zone.dragging {
+  border-color: var(--teal-dim);
+  background: var(--teal-bg);
+}
+.drop-icon { margin-bottom: 14px; color: var(--text-muted); }
+.drop-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.drop-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; max-width: 480px; margin: 0 auto 16px; }
+
+/* ── SPINNER ───────────────────────────────────── */
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid var(--surface3);
+  border-top-color: var(--teal);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+/* ── TOAST ─────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--r);
+  padding: 11px 16px;
+  font-size: 13px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  z-index: 100;
+  transform: translateY(12px);
+  opacity: 0;
+  transition: transform 0.2s, opacity 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 300px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* ── RESPONSIVE ────────────────────────────────── */
+@media (max-width: 1100px) { .stat-row { grid-template-columns: 1fr 1fr; } .detail-layout { grid-template-columns: 1fr; } .detail-signals { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 860px) { .sidebar { display: none; } .page { padding: 20px; } .analytics-grid { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .auth-page { grid-template-columns: 1fr; } .auth-left { display: none; } .stat-row { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ════════════════════════════════════════ -->
+<div id="authPage" class="auth-page">
+  <div class="auth-left">
+    <div class="auth-brand">
+      <div class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.35C16.5 22.15 20 17.25 20 12V6L12 2z" fill="#0d1117" stroke="#0d1117" stroke-width="0"/><path d="M9 12l2 2 4-4" stroke="#0d1117" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="brand-name">CODShield</span>
+    </div>
+    <div class="auth-headline">
+      <h1>Stop RTOs before<br><span>they leave the door.</span></h1>
+      <p>ML-powered risk scoring for every Cash-on-Delivery order. Know which orders will be refused before you dispatch.</p>
+      <div class="auth-metrics" style="margin-top:24px">
+        <div>
+          <div class="auth-metric-val"><span>37</span>%</div>
+          <div class="auth-metric-label">Avg RTO rate, PK</div>
+        </div>
+        <div>
+          <div class="auth-metric-val"><span>2.4</span>×</div>
+          <div class="auth-metric-label">Cost of failed delivery</div>
+        </div>
+        <div>
+          <div class="auth-metric-val"><span>0–100</span></div>
+          <div class="auth-metric-label">Risk score per order</div>
+        </div>
+      </div>
+    </div>
+    <div class="auth-preview">
+      <div class="preview-bar">
+        <div class="preview-dot" style="background:#f85149"></div>
+        <div class="preview-dot" style="background:#e3b341"></div>
+        <div class="preview-dot" style="background:#3fb950"></div>
+        <span style="margin-left:8px;font-size:11px;color:#484f58">localhost:8000 — CODShield</span>
+      </div>
+      <div class="preview-body">
+        <div class="preview-order">
+          <span class="preview-order-id">CS-10291</span>
+          <span style="color:#8b949e">Ali Khan · Lahore</span>
+          <span class="preview-score" style="background:var(--red-bg);color:var(--red)">82 HIGH</span>
+        </div>
+        <div class="preview-order">
+          <span class="preview-order-id">CS-10290</span>
+          <span style="color:#8b949e">Hamza Ahmed · Islamabad</span>
+          <span class="preview-score" style="background:var(--green-bg);color:var(--green)">14 LOW</span>
+        </div>
+        <div class="preview-order">
+          <span class="preview-order-id">CS-10289</span>
+          <span style="color:#8b949e">Ahmed Raza · Karachi</span>
+          <span class="preview-score" style="background:var(--amber-bg);color:var(--amber)">51 MED</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-form-wrap">
+      <h2>Sign in</h2>
+      <p class="sub">Access the risk dashboard.</p>
+      <div class="demo-notice">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        Demo credentials are pre-filled
+      </div>
+      <form id="authForm">
+        <div class="form-field">
+          <label for="authEmail">Email</label>
+          <input type="email" id="authEmail" value="demo@codshield.ai">
+        </div>
+        <div class="form-field">
+          <label for="authPass">Password</label>
+          <input type="password" id="authPass" value="Demo123!">
+        </div>
+        <button type="submit" class="btn-submit" id="authBtn">Continue</button>
+        <div id="authError" class="auth-error hidden">Incorrect credentials. Use the demo account.</div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ══ APP ══════════════════════════════════════════ -->
+<div id="appShell" class="shell hidden">
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-mark">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#0d1117" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        CODShield
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Navigation</div>
+      <button class="nav-btn active" id="nav-overview" onclick="go('overview')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Overview
+      </button>
+      <button class="nav-btn" id="nav-orders" onclick="go('orders')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a1 1 0 00-1 1v10a1 1 0 001 1h16a1 1 0 001-1V8a1 1 0 00-1-1z"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+        Orders
+      </button>
+      <button class="nav-btn" id="nav-analytics" onclick="go('analytics')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Analytics
+      </button>
+      <button class="nav-btn" id="nav-upload" onclick="go('upload')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        CSV Upload
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-row">
+        <div class="user-avatar">DM</div>
+        <div class="user-info">
+          <div class="user-name">Demo Merchant</div>
+          <div class="user-email">demo@codshield.ai</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-area">
+
+    <!-- OVERVIEW -->
+    <div id="pg-overview" class="page">
+      <div class="pg-head">
+        <div class="pg-head-left">
+          <h1>Risk Overview</h1>
+          <p>ML-scored orders ready for dispatch decisions</p>
+        </div>
+        <div class="pg-head-right">
+          <button class="btn" onclick="loadOrders()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+            Refresh
+          </button>
+          <button class="btn btn-primary" onclick="go('upload')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload CSV
+          </button>
+        </div>
+      </div>
+      <div class="stat-row" id="statRow"></div>
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">COD Orders</div>
+            <div class="panel-sub">Click any row to view full AI analysis</div>
+          </div>
+          <div class="filter-tabs" id="filterTabs"></div>
+        </div>
+        <div class="panel-body no-pad">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Order</th><th>Customer</th><th>City</th><th>Product</th>
+                <th>Amount</th><th>Risk Score</th><th>Level</th><th>Prediction</th><th>Decision</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="ordersTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- DETAIL -->
+    <div id="pg-detail" class="page hidden">
+      <button class="back-link" onclick="go('overview')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to overview
+      </button>
+      <div id="detailArea"></div>
+    </div>
+
+    <!-- ORDERS -->
+    <div id="pg-orders" class="page hidden">
+      <div class="pg-head">
+        <div class="pg-head-left"><h1>All Orders</h1><p>Complete order list with scores</p></div>
+      </div>
+      <div class="panel">
+        <div class="panel-body no-pad">
+          <table class="data-table">
+            <thead><tr>
+              <th>Order</th><th>Customer</th><th>City</th><th>Product</th>
+              <th>Amount</th><th>Risk Score</th><th>Level</th><th>Decision</th><th></th>
+            </tr></thead>
+            <tbody id="ordersTbody2"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div id="pg-analytics" class="page hidden">
+      <div class="pg-head">
+        <div class="pg-head-left"><h1>Analytics</h1><p>Risk patterns across your order book</p></div>
+      </div>
+      <div class="analytics-grid">
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Risk Distribution</div></div>
+          <div class="panel-body">
+            <div class="donut-layout">
+              <canvas id="donutChart" width="140" height="140"></canvas>
+              <div class="donut-legend-list" id="donutLegend"></div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Average Risk by City</div></div>
+          <div class="panel-body"><div class="bar-list" id="cityBars"></div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Decision Breakdown</div></div>
+          <div class="panel-body"><div class="bar-list" id="decisionBars"></div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Top Risk Factors</div></div>
+          <div class="panel-body"><div class="bar-list" id="factorBars"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPLOAD -->
+    <div id="pg-upload" class="page hidden">
+      <div class="pg-head">
+        <div class="pg-head-left"><h1>CSV Upload</h1><p>Batch score orders from a spreadsheet</p></div>
+        <div class="pg-head-right">
+          <button class="btn" onclick="window.open('/api/sample-csv')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download template
+          </button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-body">
+          <div class="drop-zone" id="dropZone" onclick="document.getElementById('csvInput').click()">
+            <input type="file" id="csvInput" accept=".csv" style="display:none" onchange="handleFile(event)">
+            <div class="drop-icon">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="12" y2="12"/><line x1="15" y1="15" x2="12" y2="12"/></svg>
+            </div>
+            <div class="drop-title">Drop CSV file here</div>
+            <div class="drop-desc">Required columns: id, customer, city, amount, previous_orders, successful_deliveries, rto_count, address_similarity, phone_reuse, delivery_zone_risk, product, hour</div>
+            <button class="btn btn-sm" style="pointer-events:none">Browse file</button>
+          </div>
+          <div id="uploadFeedback" style="margin-top:14px"></div>
+        </div>
+      </div>
+      <div id="uploadResultsPanel" class="panel hidden">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title" id="uploadResultTitle">Scored Results</div>
+            <div class="panel-sub" id="uploadResultSub"></div>
+          </div>
+          <button class="btn btn-sm" onclick="exportCSV()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export
+          </button>
+        </div>
+        <div class="panel-body no-pad">
+          <table class="data-table">
+            <thead><tr><th>Order</th><th>Customer</th><th>City</th><th>Amount</th><th>Risk Score</th><th>Level</th><th>Prediction</th></tr></thead>
+            <tbody id="uploadTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-area -->
+</div><!-- /shell -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── State ───────────────────────────────────────
+let orders = [], uploadedOrders = [], activeFilter = 'all';
+const $ = id => document.getElementById(id);
+
+// ─── Utils ───────────────────────────────────────
+const riskColor = s => s >= 70 ? 'var(--red)' : s >= 40 ? 'var(--amber)' : 'var(--green)';
+const riskClass = s => s >= 70 ? 'high' : s >= 40 ? 'medium' : 'low';
+const fmt = n => Number(n).toLocaleString();
+
+function toast(msg) {
+  const t = $('toast');
+  t.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> ${msg}`;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function scoreCell(s) {
+  const c = riskColor(s);
+  return `<div class="score-cell">
+    <div class="score-track"><div class="score-fill" style="width:${s}%;background:${c}"></div></div>
+    <span class="score-num" style="color:${c}">${s}</span>
+  </div>`;
+}
+
+// ─── Navigation ──────────────────────────────────
+function go(page) {
+  ['overview','detail','orders','analytics','upload'].forEach(p => $('pg-'+p).classList.add('hidden'));
+  $('pg-'+page).classList.remove('hidden');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const t = page === 'detail' ? 'overview' : page;
+  const nb = $('nav-'+t); if (nb) nb.classList.add('active');
+  if (page === 'analytics') renderAnalytics();
+  if (page === 'orders') renderOrdersPage();
+}
+
+// ─── Auth ─────────────────────────────────────────
+$('authForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = $('authBtn');
+  btn.textContent = 'Signing in…'; btn.disabled = true;
+  const r = await fetch('/api/login', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({email: $('authEmail').value, password: $('authPass').value})
+  });
+  if (!r.ok) {
+    $('authError').classList.remove('hidden');
+    btn.textContent = 'Continue'; btn.disabled = false; return;
+  }
+  $('authPage').classList.add('hidden');
+  $('appShell').classList.remove('hidden');
+  loadOrders();
+});
+
+// ─── Load orders ──────────────────────────────────
+async function loadOrders() {
+  $('ordersTbody').innerHTML = '<tr><td colspan="10"><div class="loading-state"><div class="spinner"></div> Loading orders…</div></td></tr>';
+  const r = await fetch('/api/orders');
+  orders = (await r.json()).orders;
+  renderStats(); renderTable();
+}
+
+// ─── Stats ────────────────────────────────────────
+function renderStats() {
+  const high = orders.filter(x => x.risk_score >= 70).length;
+  const med  = orders.filter(x => x.risk_score >= 40 && x.risk_score < 70).length;
+  const avg  = Math.round(orders.reduce((a,x) => a + x.risk_score, 0) / orders.length);
+  $('statRow').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">Total Orders</div>
+      <div class="stat-val c-teal">${orders.length}</div>
+      <div class="stat-sub">Scored by ML model</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">High Risk</div>
+      <div class="stat-val c-red">${high}</div>
+      <div class="stat-sub">Score &ge;70 &mdash; review required</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Medium Risk</div>
+      <div class="stat-val c-amber">${med}</div>
+      <div class="stat-sub">Score 40&ndash;69</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg. Score</div>
+      <div class="stat-val" style="color:${riskColor(avg)}">${avg}</div>
+      <div class="stat-sub">Portfolio average</div>
+    </div>`;
+}
+
+// ─── Main orders table ────────────────────────────
+function renderTable(data) {
+  data = data || orders;
+  $('filterTabs').innerHTML = ['all','high','medium','low'].map(f =>
+    `<button class="ftab${activeFilter===f?' active':''}" onclick="setFilter('${f}')">${f==='all'?'All':f.charAt(0).toUpperCase()+f.slice(1)}</button>`
+  ).join('');
+  const rows = activeFilter === 'all' ? data : data.filter(o => riskClass(o.risk_score) === activeFilter);
+  $('ordersTbody').innerHTML = rows.map(o => `
+    <tr onclick="openDetail('${o.id}')">
+      <td class="td-id">${o.id}</td>
+      <td class="td-name">${o.customer}</td>
+      <td>${o.city}</td>
+      <td style="color:var(--text-secondary)">${o.product}</td>
+      <td class="td-amt">Rs.&nbsp;${fmt(o.amount)}</td>
+      <td>${scoreCell(o.risk_score)}</td>
+      <td><span class="risk-badge ${riskClass(o.risk_score)}">${o.risk_level}</span></td>
+      <td style="color:var(--text-secondary);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${o.prediction}</td>
+      <td><span class="status-badge ${o.decision}">${o.decision}</span></td>
+      <td class="td-action">View &rarr;</td>
+    </tr>`).join('');
+}
+
+function setFilter(f) { activeFilter = f; renderTable(); }
+
+// ─── Orders page ──────────────────────────────────
+function renderOrdersPage() {
+  $('ordersTbody2').innerHTML = orders.map(o => `
+    <tr onclick="openDetail('${o.id}');go('detail')">
+      <td class="td-id">${o.id}</td>
+      <td class="td-name">${o.customer}</td>
+      <td>${o.city}</td>
+      <td style="color:var(--text-secondary)">${o.product}</td>
+      <td class="td-amt">Rs.&nbsp;${fmt(o.amount)}</td>
+      <td>${scoreCell(o.risk_score)}</td>
+      <td><span class="risk-badge ${riskClass(o.risk_score)}">${o.risk_level}</span></td>
+      <td><span class="status-badge ${o.decision}">${o.decision}</span></td>
+      <td class="td-action">View &rarr;</td>
+    </tr>`).join('');
+}
+
+// ─── Detail view ──────────────────────────────────
+async function openDetail(id) {
+  go('detail');
+  $('detailArea').innerHTML = '<div class="loading-state"><div class="spinner"></div> Loading…</div>';
+  const o = await (await fetch('/api/orders/'+id)).json();
+  const c = riskColor(o.risk_score);
+
+  $('detailArea').innerHTML = `
+    <div class="detail-layout">
+      <div class="detail-main-card">
+        <div class="detail-header">
+          <div>
+            <div class="detail-title">${o.customer}</div>
+            <div class="detail-meta">${o.id} &middot; ${o.city} &middot; ${o.product} &middot; Rs.&nbsp;${fmt(o.amount)}</div>
+          </div>
+          <span class="risk-badge ${riskClass(o.risk_score)}" style="font-size:12px;padding:5px 12px">${o.risk_level} RISK</span>
+        </div>
+        <div class="gauge-area">
+          <div class="gauge-svg-wrap">${buildGauge(o.risk_score, c)}</div>
+          <div class="gauge-info">
+            <div class="gauge-score-label">Risk Score</div>
+            <div class="gauge-score-num" style="color:${c}">${o.risk_score}</div>
+            <div class="gauge-score-sub">out of 100</div>
+            <div class="gauge-prediction" style="color:${c}">${o.prediction}</div>
+          </div>
+        </div>
+        <div class="detail-signals">
+          <div class="signal-item"><div class="signal-label">Previous Orders</div><div class="signal-val">${o.previous_orders}</div></div>
+          <div class="signal-item"><div class="signal-label">Deliveries</div><div class="signal-val">${o.successful_deliveries}</div></div>
+          <div class="signal-item"><div class="signal-label">RTOs</div><div class="signal-val" style="color:${o.rto_count>0?'var(--red)':'var(--green)'}">${o.rto_count}</div></div>
+          <div class="signal-item"><div class="signal-label">Addr. Similarity</div><div class="signal-val">${Math.round(o.address_similarity*100)}%</div></div>
+          <div class="signal-item"><div class="signal-label">Phone Reuse</div><div class="signal-val">${o.phone_reuse}&times;</div></div>
+          <div class="signal-item"><div class="signal-label">Zone Risk</div><div class="signal-val">${Math.round(o.delivery_zone_risk*100)}%</div></div>
+          <div class="signal-item"><div class="signal-label">Order Hour</div><div class="signal-val">${o.hour}:00</div></div>
+          <div class="signal-item"><div class="signal-label">Amount</div><div class="signal-val">Rs.&nbsp;${fmt(o.amount)}</div></div>
+        </div>
+        <div class="detail-actions">
+          <button class="btn btn-dispatch" onclick="decide('${o.id}','dispatch')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Approve Dispatch
+          </button>
+          <button class="btn btn-review" onclick="decide('${o.id}','review')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Manual Review
+          </button>
+          <button class="btn btn-flag" onclick="decide('${o.id}','flagged')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+            Flag Order
+          </button>
+        </div>
+      </div>
+      <div class="detail-sidebar">
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Risk Factors</div></div>
+          <div class="panel-body">
+            ${o.factors.length ? o.factors.map(f => {
+              const pct = Math.round(f.impact/30*100);
+              return `<div class="factor-item">
+                <span class="factor-name">${f.name}</span>
+                <div class="factor-bar"><div class="factor-bar-fill" style="width:${pct}%"></div></div>
+                <span class="factor-impact">+${f.impact}</span>
+              </div>`;
+            }).join('') : '<p style="color:var(--text-muted);font-size:13px">No significant risk factors detected.</p>'}
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Recommendation</div></div>
+          <div class="panel-body">
+            <div class="rec-panel">
+              <strong>AI Assessment</strong>
+              ${o.recommendation}
+            </div>
+            <p style="margin-top:14px;font-size:12px;color:var(--text-muted);line-height:1.6">Score = 62% Logistic Regression + 38% business signals. RTO history, address match, phone reuse, zone risk, order value, and timing.</p>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function buildGauge(score, color) {
+  const r = 52, cx = 64, cy = 64;
+  const startAngle = Math.PI * 0.75;
+  const totalAngle = Math.PI * 1.5;
+  const angle = startAngle + (score/100) * totalAngle;
+  const x1 = cx + r*Math.cos(startAngle), y1 = cy + r*Math.sin(startAngle);
+  const x2 = cx + r*Math.cos(angle), y2 = cy + r*Math.sin(angle);
+  const large = (score/100)*totalAngle > Math.PI ? 1 : 0;
+  return `<svg width="128" height="100" viewBox="0 0 128 100" style="overflow:visible">
+    <path d="M${cx+r*Math.cos(startAngle)},${cy+r*Math.sin(startAngle)} A${r},${r} 0 1 1 ${cx+r*Math.cos(startAngle+totalAngle*0.999)},${cy+r*Math.sin(startAngle+totalAngle*0.999)}"
+      fill="none" stroke="${color.replace('var(','').replace(')','') === '--red' ? 'rgba(248,81,73,0.1)' : color.includes('amber') ? 'rgba(227,179,65,0.1)' : 'rgba(63,185,80,0.1)'}" stroke-width="8" stroke-linecap="round"/>
+    <path d="M${x1},${y1} A${r},${r} 0 ${large} 1 ${x2},${y2}"
+      fill="none" stroke="${color}" stroke-width="8" stroke-linecap="round"/>
+  </svg>`;
+}
+
+async function decide(id, d) {
+  await fetch('/api/orders/'+id+'/decision', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({decision:d})
+  });
+  toast(`Order ${id} → ${d}`);
+  await loadOrders();
+  go('overview');
+}
+
+// ─── Analytics ────────────────────────────────────
+function renderAnalytics() {
+  const high = orders.filter(x => x.risk_score >= 70).length;
+  const med  = orders.filter(x => x.risk_score >= 40 && x.risk_score < 70).length;
+  const low  = orders.length - high - med;
+
+  // Donut
+  const canvas = $('donutChart'), ctx = canvas.getContext('2d');
+  const total = orders.length || 1;
+  const slices = [
+    {v: high, c: '#f85149'},
+    {v: med,  c: '#e3b341'},
+    {v: low,  c: '#3fb950'}
+  ];
+  let angle = -Math.PI/2; ctx.clearRect(0,0,140,140);
+  slices.forEach(s => {
+    const sw = (s.v/total)*Math.PI*2;
+    ctx.beginPath(); ctx.moveTo(70,70); ctx.arc(70,70,62,angle,angle+sw);
+    ctx.closePath(); ctx.fillStyle = s.c; ctx.fill();
+    angle += sw;
+  });
+  ctx.beginPath(); ctx.arc(70,70,40,0,Math.PI*2);
+  ctx.fillStyle = '#1c2128'; ctx.fill();
+  ctx.fillStyle = '#e6edf3'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.font = 'bold 18px Inter,sans-serif'; ctx.fillText(total, 70, 66);
+  ctx.font = '11px Inter,sans-serif'; ctx.fillStyle = '#484f58'; ctx.fillText('orders', 70, 82);
+  $('donutLegend').innerHTML = [
+    {l:'High Risk', v:high, c:'#f85149'},
+    {l:'Medium Risk', v:med, c:'#e3b341'},
+    {l:'Low Risk', v:low, c:'#3fb950'}
+  ].map(d => `<div class="legend-row">
+    <div class="legend-swatch" style="background:${d.c}"></div>
+    <span class="legend-label">${d.l}</span>
+    <span class="legend-val" style="color:${d.c}">${d.v}</span>
+  </div>`).join('');
+
+  // City bars
+  const cityMap = {};
+  orders.forEach(o => { if(!cityMap[o.city]) cityMap[o.city]={s:0,n:0}; cityMap[o.city].s+=o.risk_score; cityMap[o.city].n++; });
+  const cities = Object.entries(cityMap).map(([c,v])=>({c,avg:Math.round(v.s/v.n)})).sort((a,b)=>b.avg-a.avg);
+  const maxC = Math.max(...cities.map(c=>c.avg));
+  $('cityBars').innerHTML = cities.map(c=>`<div class="bar-item">
+    <span class="bar-label">${c.c}</span>
+    <div class="bar-track"><div class="bar-fill" style="width:${Math.round(c.avg/maxC*100)}%;background:${c.avg>=70?'#f85149':c.avg>=40?'#e3b341':'#3fb950'}"></div></div>
+    <span class="bar-val" style="color:${c.avg>=70?'#f85149':c.avg>=40?'#e3b341':'#3fb950'}">${c.avg}</span>
+  </div>`).join('');
+
+  // Decision bars
+  const dec = {dispatch:0, review:0, flagged:0};
+  orders.forEach(o => { if(dec[o.decision]!==undefined) dec[o.decision]++; });
+  const maxD = Math.max(...Object.values(dec), 1);
+  $('decisionBars').innerHTML = [
+    {k:'dispatch', l:'Dispatched',  c:'#3fb950'},
+    {k:'review',   l:'In Review',   c:'#e3b341'},
+    {k:'flagged',  l:'Flagged',     c:'#f85149'}
+  ].map(d=>`<div class="bar-item">
+    <span class="bar-label">${d.l}</span>
+    <div class="bar-track"><div class="bar-fill" style="width:${Math.round(dec[d.k]/maxD*100)}%;background:${d.c}"></div></div>
+    <span class="bar-val" style="color:${d.c}">${dec[d.k]}</span>
+  </div>`).join('');
+
+  // Factor frequency
+  const fmap = {};
+  orders.forEach(o => o.factors.forEach(f => { fmap[f.name]=(fmap[f.name]||0)+1; }));
+  const facts = Object.entries(fmap).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const maxF = Math.max(...facts.map(f=>f[1]), 1);
+  $('factorBars').innerHTML = facts.map(([n,cnt])=>`<div class="bar-item" style="grid-template-columns:130px 1fr 32px">
+    <span class="bar-label" title="${n}">${n}</span>
+    <div class="bar-track"><div class="bar-fill" style="width:${Math.round(cnt/maxF*100)}%;background:var(--teal)"></div></div>
+    <span class="bar-val" style="color:var(--teal)">${cnt}</span>
+  </div>`).join('');
+}
+
+// ─── CSV Upload ───────────────────────────────────
+const dz = $('dropZone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragging'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('dragging'));
+dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('dragging'); if(e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]); });
+function handleFile(e) { if(e.target.files[0]) processFile(e.target.files[0]); }
+
+async function processFile(file) {
+  $('uploadFeedback').innerHTML = '<div class="loading-state"><div class="spinner"></div> Scoring via ML model…</div>';
+  $('uploadResultsPanel').classList.add('hidden');
+  const fd = new FormData(); fd.append('file', file);
+  const r = await fetch('/api/upload', {method:'POST', body:fd});
+  if (!r.ok) {
+    const err = await r.json();
+    $('uploadFeedback').innerHTML = `<div style="color:var(--red);font-size:13px;padding:8px">Error: ${err.detail}</div>`;
+    return;
+  }
+  const data = await r.json(); uploadedOrders = data.orders;
+  $('uploadFeedback').innerHTML = `<div style="color:var(--teal);font-size:13px;padding:8px">${data.count} orders scored successfully.</div>`;
+  $('uploadResultTitle').textContent = `${data.count} orders scored`;
+  $('uploadResultSub').textContent = file.name;
+  $('uploadTbody').innerHTML = data.orders.map(o=>`<tr>
+    <td class="td-id">${o.id}</td>
+    <td class="td-name">${o.customer}</td>
+    <td>${o.city}</td>
+    <td class="td-amt">Rs.&nbsp;${fmt(o.amount)}</td>
+    <td>${scoreCell(o.risk_score)}</td>
+    <td><span class="risk-badge ${riskClass(o.risk_score)}">${o.risk_level}</span></td>
+    <td style="color:var(--text-secondary)">${o.prediction}</td>
+  </tr>`).join('');
+  $('uploadResultsPanel').classList.remove('hidden');
+  toast(`${data.count} orders scored`);
+}
+
+function exportCSV() {
+  if(!uploadedOrders.length) return;
+  const cols = ['id','customer','city','amount','risk_score','risk_level','prediction','decision'];
+  const blob = new Blob([[cols.join(','), ...uploadedOrders.map(o=>cols.map(c=>o[c]).join(','))].join('\n')], {type:'text/csv'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'codshield_scored.csv'; a.click();
+}
+
+// ─── Boot ─────────────────────────────────────────
+loadOrders();
+</script>
+</body>
+</html>
+<style>
+:root{--bg:#0a0d14;--surface:#111827;--surface2:#1a2235;--surface3:#1f2d45;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#f1f5f9;--muted:#64748b;--muted2:#94a3b8;--accent:#6366f1;--accent2:#818cf8;--accent-glow:rgba(99,102,241,0.25);--green:#10b981;--green-bg:rgba(16,185,129,0.12);--amber:#f59e0b;--amber-bg:rgba(245,158,11,0.12);--red:#ef4444;--red-bg:rgba(239,68,68,0.12);--blue:#3b82f6;--blue-bg:rgba(59,130,246,0.12);--r:14px;--r-lg:20px;--shadow:0 25px 50px rgba(0,0,0,0.5);--t:0.2s cubic-bezier(0.4,0,0.2,1)}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input{font:inherit;outline:none}.hidden{display:none!important}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:99px}
+
+/* LOGIN */
+.login-page{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+.login-hero{background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 50%,#0f172a 100%);padding:60px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.login-hero::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.2) 0%,transparent 70%);top:-150px;right:-150px;pointer-events:none}
+.login-hero::after{content:'';position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(16,185,129,.1) 0%,transparent 70%);bottom:-100px;left:-100px;pointer-events:none}
+.hero-logo{display:flex;align-items:center;gap:12px;font-weight:800;font-size:20px;color:white;z-index:1;position:relative}
+.logo-shield{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-size:18px;box-shadow:0 0 20px var(--accent-glow)}
+.hero-content{z-index:1;position:relative}
+.hero-content h1{font-size:40px;font-weight:900;line-height:1.15;margin-bottom:18px;background:linear-gradient(135deg,#fff 0%,#a5b4fc 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-content p{color:#94a3b8;font-size:16px;line-height:1.7;max-width:420px}
+.hero-features{display:grid;gap:13px;margin-top:30px}
+.hero-feat{display:flex;align-items:center;gap:12px;font-size:14px;color:#cbd5e1}
+.feat-icon{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-size:15px;flex-shrink:0}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;z-index:1;position:relative}
+.hero-stat{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px}
+.hero-stat-n{font-size:24px;font-weight:800;background:linear-gradient(135deg,#fff,#a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-stat-l{font-size:11px;color:#64748b;margin-top:3px;font-weight:500}
+.login-form-side{background:var(--bg);display:flex;align-items:center;justify-content:center;padding:40px}
+.login-card{width:min(440px,100%);background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-lg);padding:44px;box-shadow:var(--shadow)}
+.login-card .card-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;margin-bottom:32px}
+.login-card h2{font-size:26px;font-weight:800;margin-bottom:6px}
+.login-card .subtitle{color:var(--muted2);font-size:14px;margin-bottom:24px}
+.demo-badge{display:inline-flex;align-items:center;gap:6px;background:var(--blue-bg);border:1px solid rgba(59,130,246,.3);color:var(--blue);border-radius:99px;padding:6px 12px;font-size:12px;font-weight:600;margin-bottom:22px}
+label{display:block;font-size:13px;font-weight:600;color:var(--muted2);margin-bottom:7px}
+.input-wrap{margin-bottom:16px}
+input[type=text],input[type=email],input[type=password]{width:100%;background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:10px;padding:13px 15px;font-size:14px;transition:var(--t)}
+input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.btn-primary{width:100%;border:0;border-radius:10px;padding:14px;background:linear-gradient(135deg,var(--accent),#4f46e5);color:white;font-weight:700;font-size:15px;cursor:pointer;margin-top:8px;transition:var(--t);box-shadow:0 4px 20px var(--accent-glow)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 30px var(--accent-glow)}
+.login-error{color:var(--red);font-size:13px;margin-top:12px}
+
+/* APP */
+.app{display:flex;min-height:100vh}
+.sidebar{width:240px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;padding:24px 20px 20px;border-bottom:1px solid var(--border)}
+.nav{padding:14px 10px;display:grid;gap:3px;flex:1}
+.nav-item{display:flex;align-items:center;gap:11px;padding:11px 14px;border-radius:10px;border:0;background:transparent;color:var(--muted2);cursor:pointer;text-align:left;font-size:14px;font-weight:500;transition:var(--t);width:100%}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:var(--accent-glow);color:var(--accent2);font-weight:600}
+.nav-icon{font-size:17px;width:20px;text-align:center;flex-shrink:0}
+.nav-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:16px 14px 6px;font-weight:600}
+.sidebar-footer{padding:16px;border-top:1px solid var(--border)}
+.user-chip{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:var(--surface2)}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#4f46e5);display:grid;place-items:center;font-weight:700;font-size:13px;flex-shrink:0}
+.user-info{font-size:12px}.user-name{font-weight:600;color:var(--text)}.user-role{color:var(--muted)}
+.main{flex:1;overflow-y:auto;padding:32px 36px;min-width:0}
+.page-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:26px}
+.page-head h1{font-size:23px;font-weight:800;margin-bottom:4px}
+.page-head p{color:var(--muted2);font-size:13px}
+.page-actions{display:flex;gap:10px;align-items:center;flex-shrink:0}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);border-radius:9px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;transition:var(--t)}
+.btn:hover{background:var(--surface3)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-accent{background:linear-gradient(135deg,var(--accent),#4f46e5);border-color:transparent;color:white;box-shadow:0 4px 15px var(--accent-glow)}
+.btn-accent:hover{opacity:.9;transform:translateY(-1px)}
+.btn-green{background:var(--green-bg);border-color:rgba(16,185,129,.3);color:var(--green)}.btn-green:hover{background:rgba(16,185,129,.2)}
+.btn-red{background:var(--red-bg);border-color:rgba(239,68,68,.3);color:var(--red)}.btn-red:hover{background:rgba(239,68,68,.2)}
+.btn-amber{background:var(--amber-bg);border-color:rgba(245,158,11,.3);color:var(--amber)}.btn-amber:hover{background:rgba(245,158,11,.2)}
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:0;color:var(--accent2);font-size:14px;font-weight:600;cursor:pointer;padding:0;margin-bottom:20px;transition:var(--t)}
+.back-btn:hover{color:white}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px;position:relative;overflow:hidden;transition:var(--t)}
+.kpi-card:hover{border-color:var(--border2)}
+.kpi-icon{font-size:20px;margin-bottom:12px}
+.kpi-val{font-size:30px;font-weight:800;line-height:1}
+.c-red{color:var(--red)}.c-amber{color:var(--amber)}.c-green{color:var(--green)}.c-accent{color:var(--accent2)}
+.kpi-label{font-size:13px;color:var(--muted2);margin-top:6px}
+.kpi-delta{font-size:11px;margin-top:3px;color:var(--muted)}
+
+/* CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:24px}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.card-head h2{font-size:15px;font-weight:700}
+.card-head p{font-size:12px;color:var(--muted)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+
+/* TABLE */
+.table-wrap{overflow:auto;border-radius:var(--r);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;background:var(--surface)}
+th{padding:12px 16px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;background:var(--surface2);white-space:nowrap;border-bottom:1px solid var(--border)}
+td{padding:13px 16px;font-size:13px;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody tr{cursor:pointer;transition:var(--t)}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--surface2)}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.badge.high{background:var(--red-bg);color:var(--red);border:1px solid rgba(239,68,68,.25)}
+.badge.medium{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(245,158,11,.25)}
+.badge.low{background:var(--green-bg);color:var(--green);border:1px solid rgba(16,185,129,.25)}
+.badge.dispatch{background:var(--green-bg);color:var(--green);border:1px solid rgba(16,185,129,.25)}
+.badge.review{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(245,158,11,.25)}
+.badge.flagged{background:var(--red-bg);color:var(--red);border:1px solid rgba(239,68,68,.25)}
+.badge.pending{background:var(--surface3);color:var(--muted2);border:1px solid var(--border)}
+.badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+
+/* SCORE BAR */
+.score-wrap{display:flex;align-items:center;gap:8px}
+.score-bar{flex:1;height:5px;background:var(--surface3);border-radius:99px;overflow:hidden;max-width:70px}
+.score-fill{height:100%;border-radius:99px}
+.score-num{font-size:13px;font-weight:700;min-width:24px}
+
+/* DETAIL */
+.detail-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+.gauge-wrap{display:flex;justify-content:center;padding:8px 0 16px}
+.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.meta-item{background:var(--surface2);border-radius:10px;padding:13px}
+.meta-item small{font-size:11px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+.meta-item b{display:block;font-size:14px;font-weight:700;margin-top:4px}
+.factor-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);font-size:13px}
+.factor-row:last-child{border-bottom:0}
+.factor-bar-wrap{display:flex;align-items:center;gap:8px}
+.factor-bar{height:4px;background:var(--surface3);border-radius:99px;width:70px;overflow:hidden}
+.factor-fill{height:100%;border-radius:99px;background:var(--red)}
+.impact-val{font-size:12px;font-weight:700;color:var(--red);min-width:26px;text-align:right}
+.rec-box{background:var(--blue-bg);border:1px solid rgba(59,130,246,.2);border-radius:12px;padding:15px;margin-top:16px;font-size:13px;line-height:1.6;color:#93c5fd}
+.rec-box strong{color:var(--blue);display:block;margin-bottom:4px}
+.action-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+
+/* ANALYTICS */
+.donut-wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.donut-legend{display:grid;gap:9px;flex:1}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:13px}
+.legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.bar-chart{display:grid;gap:11px}
+.bar-row{display:grid;grid-template-columns:90px 1fr 44px;gap:10px;align-items:center;font-size:13px}
+.bar-track{height:8px;background:var(--surface2);border-radius:99px;overflow:hidden}
+.bar-fill{height:100%;border-radius:99px;transition:width 1s cubic-bezier(.4,0,.2,1)}
+
+/* UPLOAD */
+.upload-zone{border:2px dashed var(--border2);border-radius:var(--r-lg);padding:48px;text-align:center;cursor:pointer;transition:var(--t);background:var(--surface)}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:var(--accent-glow)}
+.upload-zone h3{font-size:17px;font-weight:700;margin:14px 0 8px}
+.upload-zone p{color:var(--muted2);font-size:13px;line-height:1.6}
+.upload-icon{font-size:38px}
+
+/* SPINNER */
+.spinner{width:18px;height:18px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-row{display:flex;align-items:center;justify-content:center;gap:12px;padding:40px;color:var(--muted2);font-size:14px}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:12px;padding:14px 18px;font-size:13px;font-weight:500;box-shadow:var(--shadow);z-index:999;transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.4,0,.2,1);max-width:320px}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp .4s cubic-bezier(.4,0,.2,1) forwards}
+
+/* RESPONSIVE */
+@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.detail-grid{grid-template-columns:1fr}}
+@media(max-width:860px){.sidebar{display:none}.main{padding:20px}.two-col{grid-template-columns:1fr}}
+@media(max-width:640px){.login-page{grid-template-columns:1fr}.login-hero{display:none}.kpi-grid{grid-template-columns:1fr}.login-card{padding:28px}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage" class="login-page">
+  <div class="login-hero">
+    <div class="hero-logo"><div class="logo-shield">&#x1F6E1;</div>CODShield</div>
+    <div class="hero-content">
+      <h1>Stop RTO losses before they ship.</h1>
+      <p>ML-powered risk intelligence for Pakistan's e-commerce operators. Score every COD order in real time before dispatch.</p>
+      <div class="hero-features">
+        <div class="hero-feat"><div class="feat-icon" style="background:rgba(99,102,241,.15);color:#818cf8">&#x1F916;</div>Logistic Regression risk model trained on order signals</div>
+        <div class="hero-feat"><div class="feat-icon" style="background:rgba(16,185,129,.15);color:#10b981">&#x1F4CA;</div>0&ndash;100 risk score with explainable contributing factors</div>
+        <div class="hero-feat"><div class="feat-icon" style="background:rgba(245,158,11,.15);color:#f59e0b">&#x1F4E6;</div>Bulk CSV upload &amp; batch scoring for operations teams</div>
+        <div class="hero-feat"><div class="feat-icon" style="background:rgba(239,68,68,.15);color:#ef4444">&#x1F50D;</div>Approve, review, or flag orders with one click</div>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-n">37%</div><div class="hero-stat-l">Avg RTO rate in PK e-comm</div></div>
+      <div class="hero-stat"><div class="hero-stat-n">2.4&times;</div><div class="hero-stat-l">Cost of failed delivery</div></div>
+      <div class="hero-stat"><div class="hero-stat-n">Rs 0</div><div class="hero-stat-l">Upfront cost to start</div></div>
+    </div>
+  </div>
+  <div class="login-form-side">
+    <div class="login-card">
+      <div class="card-logo"><div class="logo-shield" style="width:34px;height:34px;border-radius:10px;font-size:15px">&#x1F6E1;</div>CODShield</div>
+      <h2>Sign in to dashboard</h2>
+      <p class="subtitle">Use the demo credentials to explore the platform.</p>
+      <div class="demo-badge">&#x2139;&#xFE0F; Demo mode &mdash; credentials pre-filled</div>
+      <form id="loginForm">
+        <label for="loginEmail">Email address</label>
+        <div class="input-wrap"><input type="email" id="loginEmail" value="demo@codshield.ai" autocomplete="email"></div>
+        <label for="loginPass">Password</label>
+        <div class="input-wrap"><input type="password" id="loginPass" value="Demo123!" autocomplete="current-password"></div>
+        <button class="btn-primary" type="submit" id="loginBtn">Sign in &rarr;</button>
+        <div id="loginError" class="login-error hidden">&#x26A0;&#xFE0F; Invalid credentials &mdash; use the pre-filled demo credentials.</div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="sidebar-logo"><div class="logo-shield" style="width:32px;height:32px;border-radius:9px;font-size:14px">&#x1F6E1;</div>CODShield</div>
+    <nav class="nav">
+      <div class="nav-label">Main</div>
+      <button class="nav-item active" id="nav-overview" onclick="navigate('overview')"><span class="nav-icon">&#x1F4CA;</span>Overview</button>
+      <button class="nav-item" id="nav-orders" onclick="navigate('orders')"><span class="nav-icon">&#x1F4E6;</span>Orders</button>
+      <button class="nav-item" id="nav-analytics" onclick="navigate('analytics')"><span class="nav-icon">&#x1F4C8;</span>Analytics</button>
+      <button class="nav-item" id="nav-upload" onclick="navigate('upload')"><span class="nav-icon">&#x2B06;&#xFE0F;</span>CSV Upload</button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar">DM</div>
+        <div class="user-info"><div class="user-name">Demo Merchant</div><div class="user-role">demo@codshield.ai</div></div>
+      </div>
+    </div>
+  </aside>
+  <main class="main">
+
+    <!-- OVERVIEW -->
+    <div id="page-overview">
+      <div class="page-head fade-up">
+        <div><h1>Risk Intelligence</h1><p>AI-scored COD orders &mdash; catch RTOs before they ship.</p></div>
+        <div class="page-actions">
+          <button class="btn" onclick="loadOrders()">&#x1F504; Refresh</button>
+          <button class="btn btn-accent" onclick="navigate('upload')">&#x2B06;&#xFE0F; Upload CSV</button>
+        </div>
+      </div>
+      <div class="kpi-grid" id="kpiGrid"></div>
+      <div class="card fade-up">
+        <div class="card-head">
+          <div><h2>Recent COD Orders</h2><p>Click any row for full AI analysis</p></div>
+          <div id="filterBtns" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Order ID</th><th>Customer</th><th>City</th><th>Product</th><th>Amount</th><th>Risk Score</th><th>Level</th><th>Prediction</th><th>Decision</th><th></th></tr></thead>
+          <tbody id="ordersBody"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- DETAIL -->
+    <div id="page-detail" class="hidden">
+      <button class="back-btn" onclick="navigate('overview')">&#x2190; Back to orders</button>
+      <div id="detailContent"></div>
+    </div>
+
+    <!-- ORDERS PAGE -->
+    <div id="page-orders" class="hidden">
+      <div class="page-head fade-up"><div><h1>All Orders</h1><p>Full order list with risk scores</p></div></div>
+      <div class="card">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Order ID</th><th>Customer</th><th>City</th><th>Product</th><th>Amount</th><th>Risk Score</th><th>Level</th><th>Decision</th><th></th></tr></thead>
+          <tbody id="ordersBody2"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div id="page-analytics" class="hidden">
+      <div class="page-head fade-up"><div><h1>Risk Analytics</h1><p>Visualise patterns across your order book.</p></div></div>
+      <div class="two-col fade-up">
+        <div class="card">
+          <div class="card-head"><div><h2>Risk Distribution</h2><p>Orders by risk level</p></div></div>
+          <div class="donut-wrap"><canvas id="donutCanvas" width="160" height="160"></canvas><div class="donut-legend" id="donutLegend"></div></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div><h2>Avg Risk by City</h2><p>Which cities have highest RTO risk?</p></div></div>
+          <div class="bar-chart" id="cityBarChart"></div>
+        </div>
+      </div>
+      <div class="two-col fade-up">
+        <div class="card">
+          <div class="card-head"><div><h2>Decision Breakdown</h2><p>How orders were handled</p></div></div>
+          <div class="bar-chart" id="decisionChart"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div><h2>Risk Factor Frequency</h2><p>Most common risk signals</p></div></div>
+          <div class="bar-chart" id="factorChart"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPLOAD -->
+    <div id="page-upload" class="hidden">
+      <div class="page-head fade-up">
+        <div><h1>Bulk CSV Upload</h1><p>Score multiple orders at once using the ML model.</p></div>
+        <button class="btn" onclick="window.open('/api/sample-csv')">&#x2B07;&#xFE0F; Download template</button>
+      </div>
+      <div class="card fade-up">
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('csvFile').click()">
+          <input type="file" id="csvFile" accept=".csv" style="display:none" onchange="handleFileSelect(event)">
+          <div class="upload-icon">&#x1F4C4;</div>
+          <h3>Drop your CSV here or click to browse</h3>
+          <p>Required columns: id, customer, city, amount, previous_orders,<br>successful_deliveries, rto_count, address_similarity, phone_reuse, delivery_zone_risk, product, hour</p>
+          <br><span class="btn btn-sm" style="pointer-events:none;margin-top:4px">Browse file</span>
+        </div>
+        <div id="uploadStatus" style="margin-top:14px"></div>
+      </div>
+      <div id="uploadResults" class="hidden">
+        <div class="card" style="margin-top:14px">
+          <div class="card-head">
+            <div><h2 id="uploadResultTitle">Upload Results</h2><p id="uploadResultSub"></p></div>
+            <button class="btn btn-sm" onclick="exportResults()">&#x2B07;&#xFE0F; Export scored CSV</button>
+          </div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Order ID</th><th>Customer</th><th>City</th><th>Amount</th><th>Risk Score</th><th>Level</th><th>Prediction</th></tr></thead>
+            <tbody id="uploadTable"></tbody>
+          </table></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+let orders=[],uploadedOrders=[],activeFilter='all';
+const $=id=>document.getElementById(id);
+function scoreColor(s){return s>=70?'#ef4444':s>=40?'#f59e0b':'#10b981'}
+function riskCls(l){return l.toLowerCase()}
+function fmt(n){return Number(n).toLocaleString()}
+function showToast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+function scoreBar(s){const c=scoreColor(s);return`<div class="score-wrap"><div class="score-bar"><div class="score-fill" style="width:${s}%;background:${c}"></div></div><span class="score-num" style="color:${c}">${s}</span></div>`}
+
+function navigate(page){
+  ['overview','orders','analytics','upload','detail'].forEach(p=>$('page-'+p).classList.add('hidden'));
+  $('page-'+page).classList.remove('hidden');
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  const navTarget=page==='detail'?'overview':page;
+  const nb=$('nav-'+navTarget);if(nb)nb.classList.add('active');
+  if(page==='analytics')renderAnalytics();
+  if(page==='orders')renderOrdersPage();
+}
+
+$('loginForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const btn=$('loginBtn');btn.textContent='Signing in\u2026';btn.disabled=true;
+  const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:$('loginEmail').value,password:$('loginPass').value})});
+  if(!r.ok){$('loginError').classList.remove('hidden');btn.textContent='Sign in \u2192';btn.disabled=false;return}
+  $('loginPage').classList.add('hidden');$('app').classList.remove('hidden');loadOrders();
+});
+
+async function loadOrders(){
+  $('ordersBody').innerHTML='<tr><td colspan="10"><div class="loading-row"><div class="spinner"></div> Loading orders\u2026</div></td></tr>';
+  const r=await fetch('/api/orders');orders=(await r.json()).orders;renderKPIs();renderOrdersTable();
+}
+
+function renderKPIs(){
+  const high=orders.filter(x=>x.risk_score>=70).length;
+  const med=orders.filter(x=>x.risk_score>=40&&x.risk_score<70).length;
+  const avg=Math.round(orders.reduce((a,x)=>a+x.risk_score,0)/orders.length);
+  $('kpiGrid').innerHTML=`
+    <div class="kpi-card fade-up"><div class="kpi-icon">&#x1F4E6;</div><div class="kpi-val c-accent">${orders.length}</div><div class="kpi-label">Orders Analyzed</div><div class="kpi-delta">All scored by ML model</div></div>
+    <div class="kpi-card fade-up"><div class="kpi-icon">&#x1F534;</div><div class="kpi-val c-red">${high}</div><div class="kpi-label">High Risk Orders</div><div class="kpi-delta">Score &ge;70 &mdash; review required</div></div>
+    <div class="kpi-card fade-up"><div class="kpi-icon">&#x1F7E1;</div><div class="kpi-val c-amber">${med}</div><div class="kpi-label">Medium Risk Orders</div><div class="kpi-delta">Score 40&ndash;69 &mdash; review advised</div></div>
+    <div class="kpi-card fade-up"><div class="kpi-icon">&#x1F4C8;</div><div class="kpi-val ${avg>=70?'c-red':avg>=40?'c-amber':'c-green'}">${avg}</div><div class="kpi-label">Avg. Risk Score</div><div class="kpi-delta">Portfolio-wide risk level</div></div>`;
+}
+
+function renderOrdersTable(data){
+  data=data||orders;
+  $('filterBtns').innerHTML=['all','high','medium','low'].map(f=>`<button class="btn btn-sm${activeFilter===f?' btn-accent':''}" onclick="setFilter('${f}')">${f==='all'?'All':f.charAt(0).toUpperCase()+f.slice(1)}</button>`).join('');
+  const filtered=activeFilter==='all'?data:data.filter(o=>o.risk_level.toLowerCase()===activeFilter);
+  $('ordersBody').innerHTML=filtered.map(o=>`<tr onclick="showDetail('${o.id}')">
+    <td><b>${o.id}</b></td><td>${o.customer}</td><td>${o.city}</td><td>${o.product}</td>
+    <td>Rs.&nbsp;${fmt(o.amount)}</td><td>${scoreBar(o.risk_score)}</td>
+    <td><span class="badge ${riskCls(o.risk_level)}">${o.risk_level}</span></td>
+    <td style="max-width:170px;overflow:hidden;text-overflow:ellipsis">${o.prediction}</td>
+    <td><span class="badge ${o.decision}">${o.decision}</span></td>
+    <td><span style="color:#818cf8;font-weight:600;font-size:12px">Analyze &rarr;</span></td>
+  </tr>`).join('');
+}
+
+function setFilter(f){activeFilter=f;renderOrdersTable()}
+
+function renderOrdersPage(){
+  $('ordersBody2').innerHTML=orders.map(o=>`<tr onclick="showDetail('${o.id}');navigate('detail')">
+    <td><b>${o.id}</b></td><td>${o.customer}</td><td>${o.city}</td><td>${o.product}</td>
+    <td>Rs.&nbsp;${fmt(o.amount)}</td><td>${scoreBar(o.risk_score)}</td>
+    <td><span class="badge ${riskCls(o.risk_level)}">${o.risk_level}</span></td>
+    <td><span class="badge ${o.decision}">${o.decision}</span></td>
+    <td><span style="color:#818cf8;font-weight:600;font-size:12px">View &rarr;</span></td>
+  </tr>`).join('');
+}
+
+async function showDetail(id){
+  navigate('detail');
+  $('detailContent').innerHTML='<div class="loading-row"><div class="spinner"></div> Loading analysis\u2026</div>';
+  const o=await (await fetch('/api/orders/'+id)).json();
+  const c=scoreColor(o.risk_score);
+  $('detailContent').innerHTML=`
+    <div class="page-head">
+      <div><h1>${o.customer}</h1><p>${o.id} &middot; ${o.city} &middot; ${o.product} &middot; Rs.&nbsp;${fmt(o.amount)}</p></div>
+      <span class="badge ${riskCls(o.risk_level)}" style="font-size:13px;padding:8px 16px">${o.risk_level} RISK</span>
+    </div>
+    <div class="detail-grid">
+      <div class="card">
+        <div class="gauge-wrap">${buildGauge(o.risk_score,c)}</div>
+        <div style="text-align:center;margin-bottom:8px"><div style="font-size:12px;color:var(--muted2);margin-bottom:4px">AI Prediction</div><div style="font-size:16px;font-weight:700;color:${c}">${o.prediction}</div></div>
+        <div class="meta-grid">
+          <div class="meta-item"><small>Previous Orders</small><b>${o.previous_orders}</b></div>
+          <div class="meta-item"><small>Successful Deliveries</small><b>${o.successful_deliveries}</b></div>
+          <div class="meta-item"><small>Return-to-Origin</small><b style="color:${o.rto_count>0?'#ef4444':'#10b981'}">${o.rto_count}</b></div>
+          <div class="meta-item"><small>Address Similarity</small><b>${Math.round(o.address_similarity*100)}%</b></div>
+          <div class="meta-item"><small>Phone Reuse</small><b>${o.phone_reuse}&times;</b></div>
+          <div class="meta-item"><small>Zone Risk</small><b>${Math.round(o.delivery_zone_risk*100)}%</b></div>
+          <div class="meta-item"><small>Order Hour</small><b>${o.hour}:00</b></div>
+          <div class="meta-item"><small>Order Amount</small><b>Rs.&nbsp;${fmt(o.amount)}</b></div>
+        </div>
+        <div class="action-row">
+          <button class="btn btn-green" onclick="decision('${o.id}','dispatch')">&#x2705; Approve Dispatch</button>
+          <button class="btn btn-amber" onclick="decision('${o.id}','review')">&#x1F50E; Manual Review</button>
+          <button class="btn btn-red" onclick="decision('${o.id}','flagged')">&#x1F6A9; Flag Order</button>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-head"><div><h2>Risk Factors</h2><p>Why this score was assigned</p></div></div>
+          ${o.factors.length?o.factors.map(f=>`<div class="factor-row"><span>${f.name}</span><div class="factor-bar-wrap"><div class="factor-bar"><div class="factor-fill" style="width:${Math.round(f.impact/30*100)}%"></div></div><span class="impact-val">+${f.impact}</span></div></div>`).join(''):'<p style="color:var(--muted2);font-size:13px;padding:8px 0">No major risk factors detected.</p>'}
+          <div class="rec-box"><strong>&#x1F916; AI Recommendation</strong>${o.recommendation}</div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div><h2>How it works</h2></div></div>
+          <p style="font-size:13px;color:var(--muted2);line-height:1.7">CODShield combines a <strong style="color:var(--text)">Logistic Regression model</strong> trained on customer, address, phone, zone, and order signals with a transparent business-rule layer. The final score blends model probability (62%) with heuristic business risk (38%).</p>
+        </div>
+      </div>
+    </div>`;
+}
+
+function buildGauge(score,color){
+  const r=68,cx=90,cy=88;
+  const sa=Math.PI*.75,total=Math.PI*1.5;
+  const ea=sa+(score/100)*total;
+  const x1=cx+r*Math.cos(sa),y1=cy+r*Math.sin(sa);
+  const x2=cx+r*Math.cos(ea),y2=cy+r*Math.sin(ea);
+  const large=(score/100)*total>Math.PI?1:0;
+  return`<svg width="180" height="140" viewBox="0 0 180 140" style="overflow:visible">
+    <path d="M${cx+r*Math.cos(sa)},${cy+r*Math.sin(sa)} A${r},${r} 0 1 1 ${cx+r*Math.cos(sa+total*.999)},${cy+r*Math.sin(sa+total*.999)}" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="10" stroke-linecap="round"/>
+    <path d="M${x1},${y1} A${r},${r} 0 ${large} 1 ${x2},${y2}" fill="none" stroke="${color}" stroke-width="10" stroke-linecap="round"/>
+    <text x="${cx}" y="${cy+6}" text-anchor="middle" fill="${color}" font-size="34" font-weight="900" font-family="Inter,sans-serif">${score}</text>
+    <text x="${cx}" y="${cy+24}" text-anchor="middle" fill="#64748b" font-size="11" font-family="Inter,sans-serif">/ 100</text>
+  </svg>`;
+}
+
+async function decision(id,d){
+  await fetch('/api/orders/'+id+'/decision',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({decision:d})});
+  showToast('Order '+id+' marked as "'+d+'"');
+  await loadOrders();navigate('overview');
+}
+
+function renderAnalytics(){
+  const high=orders.filter(x=>x.risk_score>=70).length;
+  const med=orders.filter(x=>x.risk_score>=40&&x.risk_score<70).length;
+  const low=orders.length-high-med;
+  drawDonut([{label:'High Risk',val:high,color:'#ef4444'},{label:'Medium Risk',val:med,color:'#f59e0b'},{label:'Low Risk',val:low,color:'#10b981'}]);
+  const cityMap={};
+  orders.forEach(o=>{if(!cityMap[o.city])cityMap[o.city]={sum:0,n:0};cityMap[o.city].sum+=o.risk_score;cityMap[o.city].n++;});
+  const cities=Object.entries(cityMap).map(([c,v])=>({city:c,avg:Math.round(v.sum/v.n)})).sort((a,b)=>b.avg-a.avg);
+  const maxC=Math.max(...cities.map(c=>c.avg));
+  $('cityBarChart').innerHTML=cities.map(c=>`<div class="bar-row"><span>${c.city}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(c.avg/maxC*100)}%;background:${scoreColor(c.avg)}"></div></div><span style="color:${scoreColor(c.avg)};font-weight:700;text-align:right">${c.avg}</span></div>`).join('');
+  const dec={dispatch:0,review:0,flagged:0};
+  orders.forEach(o=>{if(dec[o.decision]!==undefined)dec[o.decision]++;});
+  const maxD=Math.max(...Object.values(dec),1);
+  $('decisionChart').innerHTML=[{k:'dispatch',l:'Dispatched',c:'#10b981'},{k:'review',l:'In Review',c:'#f59e0b'},{k:'flagged',l:'Flagged',c:'#ef4444'}]
+    .map(d=>`<div class="bar-row"><span>${d.l}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(dec[d.k]/maxD*100)}%;background:${d.c}"></div></div><span style="color:${d.c};font-weight:700;text-align:right">${dec[d.k]}</span></div>`).join('');
+  const fMap={};orders.forEach(o=>o.factors.forEach(f=>{fMap[f.name]=(fMap[f.name]||0)+1;}));
+  const facts=Object.entries(fMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const maxF=Math.max(...facts.map(f=>f[1]),1);
+  $('factorChart').innerHTML=facts.map(([n,cnt])=>`<div class="bar-row" style="grid-template-columns:150px 1fr 32px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${n}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(cnt/maxF*100)}%;background:#818cf8"></div></div><span style="color:#818cf8;font-weight:700;text-align:right">${cnt}</span></div>`).join('');
+}
+
+function drawDonut(data){
+  const canvas=$('donutCanvas');const ctx=canvas.getContext('2d');
+  const cx=80,cy=80,r=65,ir=46;const total=data.reduce((a,d)=>a+d.val,0)||1;
+  let angle=-Math.PI/2;ctx.clearRect(0,0,160,160);
+  data.forEach(d=>{const sw=(d.val/total)*Math.PI*2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,angle,angle+sw);ctx.closePath();ctx.fillStyle=d.color;ctx.fill();angle+=sw;});
+  ctx.beginPath();ctx.arc(cx,cy,ir,0,Math.PI*2);ctx.fillStyle='#111827';ctx.fill();
+  ctx.fillStyle='#f1f5f9';ctx.font='bold 20px Inter,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(total,cx,cy-6);
+  ctx.font='11px Inter,sans-serif';ctx.fillStyle='#64748b';ctx.fillText('orders',cx,cy+10);
+  $('donutLegend').innerHTML=data.map(d=>`<div class="legend-item"><div class="legend-dot" style="background:${d.color}"></div><span>${d.label}</span><b style="margin-left:auto;color:${d.color}">${d.val}</b></div>`).join('');
+}
+
+const zone=$('uploadZone');
+zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag')});
+zone.addEventListener('dragleave',()=>zone.classList.remove('drag'));
+zone.addEventListener('drop',e=>{e.preventDefault();zone.classList.remove('drag');if(e.dataTransfer.files[0])processCSV(e.dataTransfer.files[0])});
+function handleFileSelect(e){if(e.target.files[0])processCSV(e.target.files[0])}
+
+async function processCSV(file){
+  $('uploadStatus').innerHTML='<div class="loading-row"><div class="spinner"></div> Scoring orders via ML model\u2026</div>';
+  $('uploadResults').classList.add('hidden');
+  const fd=new FormData();fd.append('file',file);
+  const r=await fetch('/api/upload',{method:'POST',body:fd});
+  if(!r.ok){const err=await r.json();$('uploadStatus').innerHTML=`<div style="color:var(--red);padding:12px;font-size:14px">&#x274C; Error: ${err.detail}</div>`;return}
+  const data=await r.json();uploadedOrders=data.orders;
+  $('uploadStatus').innerHTML=`<div style="color:var(--green);padding:12px;font-size:14px">&#x2705; Successfully scored ${data.count} orders.</div>`;
+  $('uploadResultTitle').textContent=`Results \u2014 ${data.count} orders scored`;
+  $('uploadResultSub').textContent='From file: '+file.name;
+  $('uploadTable').innerHTML=data.orders.map(o=>`<tr><td><b>${o.id}</b></td><td>${o.customer}</td><td>${o.city}</td><td>Rs.&nbsp;${fmt(o.amount)}</td><td>${scoreBar(o.risk_score)}</td><td><span class="badge ${riskCls(o.risk_level)}">${o.risk_level}</span></td><td>${o.prediction}</td></tr>`).join('');
+  $('uploadResults').classList.remove('hidden');showToast(data.count+' orders scored successfully');
+}
+
+function exportResults(){
+  if(!uploadedOrders.length)return;
+  const cols=['id','customer','city','amount','risk_score','risk_level','prediction','decision'];
+  const rows=[cols.join(','),...uploadedOrders.map(o=>cols.map(c=>o[c]).join(','))];
+  const blob=new Blob([rows.join('\n')],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='codshield_scored.csv';a.click();
+}
+
+loadOrders();
+</script>
+</body>
+</html>
